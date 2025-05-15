@@ -9,7 +9,7 @@ import lombok.Setter;
 @Table(name = "user_roles")
 @Getter
 @Setter
-public class UserRole {
+public class u {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,9 +25,9 @@ public class UserRole {
     private Role role;
 
     // Constructors, getters, setters
-    public UserRole() {}
+    public u() {}
 
-    public UserRole(User user, Role role) {
+    public u(User user, Role role) {
          this.user = user;
          this.role = role;
     }

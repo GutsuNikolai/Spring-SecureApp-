@@ -19,7 +19,7 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    // Метод для получения роли по имени
+    // Метод для проверкки существования роли
     public Optional<Role> findByName(String name) {
         return roleRepository.findByName(name);
     }

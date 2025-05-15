@@ -1,17 +1,15 @@
 package com.example.security_app.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "roles")  // Таблица в БД
-@Getter
 @Setter
-@NoArgsConstructor
+@Getter
+@AllArgsConstructor
 public class Role {
 
     @Id
@@ -25,7 +23,12 @@ public class Role {
     @ManyToMany(mappedBy = "roles")  // Указывает, что связь с пользователями уже настроена в сущности User
     private Set<User> users;
 
+    public Role() {};
     public Role(String name) {
         this.name = name;
     }
+    public String getName() {
+        return name;
+    }
+
 }

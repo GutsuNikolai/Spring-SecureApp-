@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import java.util.Set;
 
@@ -13,7 +14,7 @@ import java.util.Set;
 //@NoArgsConstructor
 @Entity
 @Table(name = "users")
-@Getter
+
 public class User {
 
     @Id
@@ -25,7 +26,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @NotNull(message = "Пароль не может быть null")
+    @NotNull(message = "Пароль не может быть пустым")
     @Size(min = 6, message = "Пароль должен быть не менее 6 символов")
     @Column(nullable = false)
     private String password;
@@ -40,21 +41,17 @@ public class User {
 
     public User(){}
 
-    public User(String username) {
-        this.username = username;
-    }
-    public User(String username,String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public User(String username, String password, Set<Role> roles) {
+    public User(String username,String password, Set<Role> roles ) {
         this.username = username;
         this.password = password;
         this.roles = roles;
     }
 
-    public void setUsername(String username) { this.username = username; }
-    public void setPassword(String password) { this.password = password; }
-    public void setRoles(Set<Role> roles) { this.roles = roles; }
+    public Set<Role> getRoles(){return roles;}
+    public String getUsername(){return username;}
+    public String getPassword(){return password;}
+
+//    public void setUsername(String username) { this.username = username; }
+//    public void setPassword(String password) { this.password = password; }
+//    public void setRoles(Set<Role> roles) { this.roles = roles; }
 }
