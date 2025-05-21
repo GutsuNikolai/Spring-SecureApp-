@@ -2,13 +2,21 @@ package com.example.security_app.DTO;
 
 import com.example.security_app.model.Role;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 import java.util.Set;
 
 public class UserRequest {
+
+    @NotNull(message = "Имя пользователя не может быть null")
+    @Size(min = 3, max = 50, message = "Имя пользователя должно быть от 3 до 50 символов")
     private String username;
+
+    @NotNull(message = "Пароль не может быть пустым")
+    @Size(min = 6, message = "Пароль должен быть не менее 6 символов")
     private String password;
+
     private Set<String> roles;
 
     public String getUsername(){return username;}

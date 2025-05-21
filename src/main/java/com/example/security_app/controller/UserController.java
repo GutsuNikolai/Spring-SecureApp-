@@ -7,6 +7,7 @@ import com.example.security_app.model.User;
 import com.example.security_app.model.Role;
 import com.example.security_app.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +24,6 @@ public class UserController{
 
     @Autowired
     private UserService userService;
-
-    @PostMapping("/create")
-    public User createuser(@RequestBody UserRequest request){
-        return userService.createUser(request);
-    }
-
 
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile() {

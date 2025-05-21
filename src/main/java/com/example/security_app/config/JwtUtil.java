@@ -14,29 +14,28 @@ import java.util.List;
 @Component
 public class JwtUtil {
 
-    // Секретный ключ, который мы будем использовать для подписи токенов
-    private static final String SECRET_KEY = "superSecretKeyForJWTsuperSecretKeyForJWT";  // Секретный ключ для подписи токена
-    private static final long EXPIRATION_TIME = 86400000;  // Время жизни токена (1 день, в миллисекундах)
+    // Секретный ключ для подписи токена и время жизни
+    private static final String SECRET_KEY = "superSecretKeyForJWTsuperSecretKeyForJWT";
+    private static final long EXPIRATION_TIME = 86400000; // (1 день в миллисекундах)
 
-    // Создаем ключ для подписи с помощью библиотеки jjwt
-    private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes()); // Хэш ключа
 
-    // Метод для генерации JWT токена
+    // Генерация токена
     public static String generateToken(String username, List<String> roles) {
-        return Jwts.builder()  // Начинаем строить токен
-                .setSubject(username)  // Добавляем имя пользователя в токен
-                .claim("roles", roles)   // Добавляем роль пользователя в токен
-                .setIssuedAt(new Date())  // Устанавливаем время создания токена
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))  // Устанавливаем время истечения токена
-                .signWith(key, SignatureAlgorithm.HS256)  // Подписываем токен с помощью нашего секретного ключа
-                .compact();  // Генерируем строку токена
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("roles", roles)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();  // Сбор строки токена
     }
 
     private Claims extractClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)  // Указываем ключ для проверки подписи токена
+                .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)  // Парсим токен, получаем его содержимое
+                .parseClaimsJws(token)  // Парсинг токена
                 .getBody();  // Извлекаем тело токена
     }
 

@@ -43,20 +43,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         System.out.println("🔍 JWT фильтр сработал. Токен: " + token);
 
         try {
-            // Извлекаем username из токена
+            // Извлекаю username из токена
             String username = jwtUtil.extractUsername(token);
 
-            // Проверяем, не аутентифицирован ли уже этот пользователь
+            // Проверяю, не аутентифицирован ли уже этот пользователь
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                // Загружаем пользователя из базы
+                // Загружаю пользователя из базы
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                // TODO возможно не проверяется на пренадлежность пользвоателю
-                // Проверяем, действителен ли токен
+                // Проверка действителен ли токен
                 if (jwtUtil.validateToken(token, userDetails)){
 
-                    // Создаем объект аутентификации
+                    // Создаю объект аутентификации
                     List<String> roles = jwtUtil.extractRoles(token);
                     List<SimpleGrantedAuthority> authorities = roles.stream()
                             .map(SimpleGrantedAuthority::new)
@@ -65,7 +64,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
 
-                    // Устанавливаем аутентификацию в SecurityContext
+                    // Устанавливаю аутентификацию в SecurityContext
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }

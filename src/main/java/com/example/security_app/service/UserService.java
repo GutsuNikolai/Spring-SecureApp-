@@ -2,6 +2,7 @@ package com.example.security_app.service;
 
 import com.example.security_app.config.SecurityConfig;
 import com.example.security_app.DTO.UserRequest;
+import com.example.security_app.exception.ConflictException;
 import com.example.security_app.model.Role;
 import com.example.security_app.model.User;
 import com.example.security_app.repository.UserRepository;
@@ -15,6 +16,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.management.RuntimeErrorException;
 import javax.management.relation.RoleNotFoundException;
@@ -46,7 +49,9 @@ public class UserService {
     public User createUser(UserRequest request) {
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.findByName("ROLE_USER").get());
-
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new ConflictException("Username is already taken");
+        }
         // ШИФРУЕМ ПАРОЛЬ перед сохранением
         String hashedPassword = passwordEncoder.encode(request.getPassword());
 

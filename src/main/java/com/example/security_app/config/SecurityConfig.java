@@ -1,25 +1,27 @@
 package com.example.security_app.config;
 
+import com.example.security_app.exceptionSecurity.CustomAccessDeniedHandler;
+import com.example.security_app.exceptionSecurity.CustomAuthenticationEntryPoint;
 import com.example.security_app.filter.JwtAuthenticationFilter;
-import com.example.security_app.repository.UserRepository;
-import com.example.security_app.service.CustomUserDetailsService;
-import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 
 @Configuration
 public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,8 +30,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         // public endpoints
-                        .requestMatchers("/auth/login", "/users/create").permitAll()
-
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         // user endpoints
                         .requestMatchers("/users/profile").hasRole("USER")  //.hasAnyRole("USER", "ADMIN", "MODERATOR")
 
@@ -40,25 +42,19 @@ public class SecurityConfig {
 
                         // admin endpoint
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/admin/all").hasRole("ADMIN")
+
 
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // Добавляем обработку 401 Unauthorized (если нет токена или он невалиден)
+                // Обработка 401 Unauthorized и 403 Forbidden
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            System.out.println("🔐 401 Unauthorized — токен отсутствует или недействителен");
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                        })
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            System.out.println("🚫 403 Forbidden — недостаточно прав");
-                            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
-                        })
+                                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                                .accessDeniedHandler(customAccessDeniedHandler)
                 )
 
-                // Подключаем JWT фильтр перед UsernamePasswordAuthenticationFilter
+                // Фильтрация JWT перед UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -68,4 +64,5 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
 }

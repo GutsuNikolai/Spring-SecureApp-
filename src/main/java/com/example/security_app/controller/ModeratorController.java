@@ -39,7 +39,6 @@ public class ModeratorController {
                 .toList();
     }
 
-
     @GetMapping("/{username}")
     public Optional<User> getUserByUsername(@PathVariable String username){
         return userService.findByUsername(username);
