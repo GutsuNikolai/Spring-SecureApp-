@@ -3,18 +3,14 @@ package com.example.security_app.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
 
 import java.util.Set;
 
-//@AllArgsConstructor
-//@NoArgsConstructor
 @Entity
 @Table(name = "users")
-
+@Data
 public class User {
 
     @Id
@@ -37,6 +33,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+
     private Set<Role> roles;
 
     public User(){}
@@ -47,11 +44,9 @@ public class User {
         this.roles = roles;
     }
 
+    // Автогенерируемые не принимает, дает ошибку
     public Set<Role> getRoles(){return roles;}
     public String getUsername(){return username;}
     public String getPassword(){return password;}
 
-//    public void setUsername(String username) { this.username = username; }
-//    public void setPassword(String password) { this.password = password; }
-//    public void setRoles(Set<Role> roles) { this.roles = roles; }
 }

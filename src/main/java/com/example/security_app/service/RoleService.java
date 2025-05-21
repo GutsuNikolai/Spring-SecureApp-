@@ -2,7 +2,6 @@ package com.example.security_app.service;
 
 import com.example.security_app.model.Role;
 import com.example.security_app.repository.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -10,8 +9,10 @@ import java.util.Optional;
 @Service
 public class RoleService {
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
+    private RoleService (RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
     // Метод для добавления роли
     public Role createRole(String name) {

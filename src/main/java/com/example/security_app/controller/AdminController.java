@@ -5,7 +5,7 @@ import com.example.security_app.DTO.UserRequest;
 import com.example.security_app.model.Role;
 import com.example.security_app.model.User;
 import com.example.security_app.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +15,10 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private AdminController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/setRole")
     public User setRole(@RequestBody UserRequest request){

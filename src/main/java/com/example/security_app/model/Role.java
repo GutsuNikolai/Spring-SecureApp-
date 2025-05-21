@@ -6,27 +6,29 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "roles")  // Таблица в БД
+@Table(name = "roles")
 @Setter
 @Getter
 @AllArgsConstructor
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Автоинкремент ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false)  // Уникальное и обязательное поле
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    // Связь многие ко многим с пользователями
-    @ManyToMany(mappedBy = "roles")  // Указывает, что связь с пользователями уже настроена в сущности User
+    // многие ко многим с пользователями
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     public Role() {};
     public Role(String name) {
         this.name = name;
     }
+
+    // Автогенерируемый не принимает, дает ошибку
     public String getName() {
         return name;
     }

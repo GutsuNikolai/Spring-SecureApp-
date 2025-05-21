@@ -3,33 +3,37 @@ package com.example.security_app.controller;
 import com.example.security_app.DTO.LoginRequest;
 import com.example.security_app.DTO.UserRequest;
 import com.example.security_app.config.JwtUtil;
+import com.example.security_app.model.Role;
+import com.example.security_app.model.User;
+import com.example.security_app.repository.UserRepository;
 import com.example.security_app.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.example.security_app.model.User;
-import com.example.security_app.model.Role;
-import com.example.security_app.repository.UserRepository;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private UserRepository userRepository;  // Репозиторий для работы с пользователями
-    @Autowired
-    private UserService userService;
+    private final UserRepository userRepository;  // Репозиторий для работы с пользователями
+    private final UserService userService;
+
+    private AuthController(UserService userService, UserRepository userRepository) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+    }
 
     private final Map<String, Integer> loginAttempts = new ConcurrentHashMap<>();
     private final Map<String, Long> lockoutUntil = new ConcurrentHashMap<>();

@@ -1,12 +1,13 @@
 package com.example.security_app.DTO;
 
-import com.example.security_app.model.Role;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.util.List;
+import lombok.Data;
+
 import java.util.Set;
 
+@Data
 public class UserRequest {
 
     @NotNull(message = "Имя пользователя не может быть null")
@@ -19,6 +20,7 @@ public class UserRequest {
 
     private Set<String> roles;
 
+    // Геттеры и сеттеры, ибо автогенерируемые не принимает, дает ошибку
     public String getUsername(){return username;}
     public String getPassword(){return password;}
     public Set<String> getRoles(){return roles;}

@@ -4,7 +4,7 @@ public class LoginRequest {
     private String username;
     private String password;
 
-    // Геттеры и сеттеры
+    // Геттеры и сеттеры, ибо автогенерируемые не принимает, дает ошибку
     public String getUsername() {
         return username;
     }
